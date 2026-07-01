@@ -1,0 +1,140 @@
+site_name: Fastrack Serial Driver
+site_description: >
+    A serial driver for the Polhemus Fastrack.
+columns:
+site_url: https://fsd.nontrivialsolutions.com/
+theme:
+    name: material
+    logo: infra/assets/logo.svg
+    favicon: infra/assets/favicon.png
+    palette:
+        - media: "(prefers-color-scheme: light)"
+          accent: deep purple
+          primary: deep purple
+          scheme: default
+          toggle:
+              icon: material/brightness-7
+              name: Switch to dark mode
+
+        # Palette toggle for dark mode
+        - media: "(prefers-color-scheme: dark)"
+          accent: deep purple
+          primary: deep purple
+          scheme: dracula
+          toggle:
+              icon: material/brightness-4
+              name: Switch to light mode
+    features:
+        - navigation.tabs
+        - navigation.tabs.sticky
+        - navigation.sections
+        - navigation.indexes
+        - toc.follow
+        - navigation.top
+        - content.code.copy
+repo_name: Nontrivial-Solutions/fastrak-serial-driver
+repo_url: https://github.com/Nontrivial-Solutions/fastrak-serial-driver
+extra_css:
+    - https://unpkg.com/katex@0/dist/katex.min.css
+    - "infra/css/colors.css"
+    - "infra/css/admonitions.css"
+    - "infra/css/icon.css"
+    - "infra/css/authors.css"
+    - "infra/css/status.css"
+
+extra_javascript:
+    - https://unpkg.com/katex@0/dist/katex.min.js
+    - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+    - "infra/js/extra.js"
+
+watch:
+    - docs
+
+nav:
+    - Home: README.md
+    - Use Cases:
+          - content/usecase/usecase/index.md
+          - content/usecase/usecase
+          - Actors:
+                - content/usecase/actors/index.md
+                - content/usecase/actors
+    - Architectural Decision Records:
+          - content/madr/index.md
+          - content/madr
+    - Code Comments:
+          - content/code/index.md
+          - content/code
+plugins:
+    - search:
+    - autorefs:
+    - bibtex:
+          bib_file: "docs/infra/ref.bib"
+    - authors:
+          authors_file: "infra/.authors.yml"
+    - include_dir_to_nav:
+          file_pattern: '\d{4}.*\.md$'
+          recurse: False
+    - mkdocstrings:
+          handlers:
+              python:
+                  options:
+                      extensions:
+                          - griffe_typingdoc
+                      show_root_heading: true
+                      show_if_no_docstring: true
+                      preload_modules:
+                          - httpx
+                          - starlette
+                      inherited_members: true
+                      members_order: source
+                      separate_signature: true
+                      unwrap_annotated: true
+                      filters:
+                          - "!^_"
+                      merge_init_into_class: true
+                      docstring_section_style: spacy
+                      signature_crossrefs: true
+                      show_symbol_type_heading: true
+                      show_symbol_type_toc: true
+markdown_extensions:
+    - attr_list
+    - footnotes
+    - pymdownx.arithmatex:
+          generic: true
+    - toc:
+          permalink: 
+          separator: "_"
+    - pymdownx.details
+    - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+          options:
+              custom_icons:
+                  - overrides/.icons
+    - pymdownx.superfences:
+          custom_fences:
+              - name: mermaid
+                class: mermaid
+                format: !!python/name:pymdownx.superfences.fence_code_format
+    - pymdownx.highlight:
+          use_pygments: true
+          anchor_linenums: true
+          pygments_lang_class: true
+          linenums: true
+          linenums_style: pymdownx-inline
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.blocks.caption
+    - md_in_html
+    - gfm_admonition
+extra:
+    social:
+        - icon: fontawesome/brands/github-alt
+          link: https://github.com/Nontrivial-Solutions/fastrak-serial-driver"
+    status:
+        deprecated: Decision is Suggested
+        suggested: Decision is Suggested
+        in_progress: Decision is in Progress
+        accepted: Accepted Decision
+        happy: This test is on the happy path
+        unhappy: This test is on the unhappy path
