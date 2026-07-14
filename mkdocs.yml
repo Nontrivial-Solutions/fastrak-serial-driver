@@ -46,6 +46,7 @@ extra_javascript:
     - https://unpkg.com/katex@0/dist/katex.min.js
     - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
     - "infra/js/extra.js"
+    - "infra/js/mermaid.mjs"
 
 watch:
     - docs
@@ -61,9 +62,9 @@ nav:
     - Architectural Decision Records:
           - content/madr/index.md
           - content/madr
-    - Code Comments:
-          - content/code/index.md
-          - content/code
+    - Unit Designs:
+          - content/units/index.md
+          - content/units
 plugins:
     - search:
     - autorefs:
