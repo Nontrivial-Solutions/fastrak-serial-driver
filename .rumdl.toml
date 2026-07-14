@@ -12,3 +12,9 @@ tables = false  # Don't check tables (default: false)
 [MD060]
 enabled = true  # Default: opt-in for conservative adoption
 style = "aligned"  # Options: "aligned", "aligned-no-space", "compact", "tight", "any"
+
+[MD029]
+style = "one"  # Default - matches markdownlint behavior
+
+[MD004]
+style = "dash"  # Options: "consistent", "asterisk", "plus", "dash", "sublist"

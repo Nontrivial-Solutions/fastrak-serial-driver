@@ -18,7 +18,9 @@ authors:
 ### What Am I?
 
 This repository contains an opinionated python serial driver for the
-[Polhemus Fastrak](https://polhemus.com/all-trackers/fastrak).
+[Polhemus Fastrak](https://polhemus.com/all-trackers/fastrak). In this context opinionated means
+initializes the Fastrak for a specific use case. We however supply interfaces for all serial
+commands for the Fastrak.
 
 ### About the Documentation
 
@@ -83,13 +85,39 @@ Files and directories shall be lower case, where capital is not required by a to
 `' '`.
 
 ```text
-
-
+📁 .
+├── 📁 .github
+│   ├── 📁 ISSUE_TEMPLATE
+│   ├── 📁 PULL_REQUEST_TEMPLATE
+│   ├── 📁 workflows
+│   └── 📝 pull_request_template.md
+├── 📁 .vscode
+│   └── ⚙️ launch.json
+├── 📁 docs
+│   ├── 📁 content
+│   ├── 📁 infra
+│   └── 📖 README.md
+├── 📁 src 
+│   └── 🐍 __init__.py
+├── ⚙️ .editorconfig
+├── 🙈 .gitignore
+├── 🛠️ .pre-commit-config.yaml
+├── ⚙️ .rumdl.toml
+├── ❄️ flake.lock
+├── ❄️ flake.nix
+├── 🛠️ Justfile
+├── 📜 LICENSE
+├── 📄 mkdocs.yml
+├── 🐍 pyproject.toml
+└── 🔒 uv.lock
 ```
 
 ### Directories of Interest
 
-- Docs: This directory contains the high level documentation for the tool.
+- docs: This directory contains the high level documentation for the tool.
+- src: This directory contains the source code of the tool.
+- .github: This directory contains the GitHub infrastructure.  
+- .vscode: This directory contains the debugger configuration.  
 
 ### Define a Unit
 
@@ -110,57 +138,40 @@ The plugin shall have manual integration testing.
 
 ### Requirements
 
-#### Functional Requirements
+#### Use Cases
 
-> [!requirement-card] "Psychopy Support"
->
-> The tool shall be compliant with the Psychopy plugin interface.
-
-> [!requirement-card] "System Support"
->
-> The tool shall support Windows as a primary target. The tool shall design for OSX with minimal
-> testing and support.
-
-##### Use Cases  
-
-Nonfunctional requirements are described as a collection of [use cases](./content/usecase/usecase/)
-and [actors](./content/usecase/actors/) which are collected into the following use case diagram:
+Requirements are described as a collection of [use cases](./content/usecase/usecase/) and
+[actors](./content/usecase/actors/) which are collected into the following use case diagram:
 
 ```mermaid
 flowchart LR
-  aU["👤 Trial Runner"]
-  aP["👤 Psychopy"]
-  aDD["👤 Device Failure"]
+  aU["👤 User"]
+  aT["👤 Time"]
 
+  SC(["Send Command"])
+  SRR(["Receive Response"])
   SR(["Start Recording"])
-  HEF(["Handle Failure"])
+  ER(["End Recording"])
+  B(["Boresight"])
+  GSR(["Get Single Record"])
+  I(["Initialize Device"])
+  PD(["Poll Data"])
 
-  subgraph Commands 
-      CRS(["Command Recording Start"])
-      CRSto(["Command Recording Stop"])
-      CDI(["Command Device Init"])
-  end
+  aU --> SC
+  aU --> SRR 
+  aU --> SR 
+  aU --> ER 
+  aU --> B 
+  aU -->  I 
+  aU --> GSR 
+  aT --> PD 
 
-  subgraph Configuration 
-      CfFM(["Configure Fail Mode"])
-      CfSD(["Configure Serial Device"])
-      CfBDT(["Configure Backend Device Type"])
-  end
-
-  aU --> SR
-  aP --> CfFM
-  aP --> CfSD
-  aP --> CfBDT
-  aDD --> HEF
-
-   SR -. include .-> HEF 
-
-   SR -. include .-> CRS 
-   SR -. include .-> CRSto 
-   SR -. include .-> CDI 
-
-   CRS -. include .-> HEF 
-   CDI -. include .-> HEF 
+  SR -. include .->SC
+  SR -. include .->B
+  SR -. include .->I
+  ER -. include .->SC
+  GSR -. include .->SRR
+  GSR -. include .->SC
 ```
 
 ##### Architectural Decisions
@@ -176,8 +187,8 @@ The following is the order of operations for the proposal of a MADR:
     proposal-{{short title}}
     ```
 
-2. Create a pull request with this template.
-3. In the branch create a Markdown file based on the
+1. Create a pull request with this template.
+1. In the branch create a Markdown file based on the
     [MADR Template](https://github.com/adr/madr/blob/4.0.0/template/adr-template.md). Name the
     Markdown file:
 
@@ -185,7 +196,7 @@ The following is the order of operations for the proposal of a MADR:
     {{issue# padded to five digits}}-{{title}}
     ```
 
-4. When a decision is made change the status to:
+1. When a decision is made change the status to:
     - "accepted" and pull the branch into main branch
     - "rejected" and pull the branch into main branch
 
@@ -226,130 +237,63 @@ using the included style settings.
 
 ```mermaid
 flowchart LR
-    sdofc["6DOF Component"]
-    bsdofd["Base 6DOF Device"]
-    sdofbd["6DOF Backend Device"]
-    sdofd["6DOF Device"]
-    sdofrd["6DOF Response Device"]
-    tsdofd@{ shape: processes, label: "{{Typed}}<br>6DOF Device" }
-    external["{{External Typed}}<br>Device Module"]
+    device["FastrakDevice"]
+    cwr@{ shape: processes, label: "{{Collection}}<br>Commands with response" }
+    cwor@{ shape: processes, label: "{{Collection}}<br>Commands without response" }
 
-    sdofbd --> sdofc
-    sdofd --> sdofbd
-    tsdofd  --> sdofd
-    bsdofd --> tsdofd 
-    sdofrd --> tsdofd 
-    external --> tsdofd
+    device--> cwr
+    device --> cwor 
 ```
 
 #### Class Diagram
 
 ```mermaid
 classDiagram
-    Sdofcomponent--|> BaseDeviceComponent
-    Sdofcomponent -- SdofDeviceBackend 
-    Sdofcomponent -- Sdof 
-    SdofDeviceBackend -- Sdof 
 
-    FastrakSdofDevice--o SdofDevice 
-    SdofDevice  --o SdofDeviceBackend
-    SdofResponse--o SdofDevice 
+    FastrakDevice o-- SerialCommandsWithResp
+    FastrakDevice o-- SerialCommands
+    FastrakDevice o-- Support 
 
-    SdofResponse--|>BaseResponse
-    FastrakSdofDevice --|> BaseSdofDevice
-    SdofDeviceBackend--|> DeviceBackend
-    BaseSdofDevice--|>BaseDevice 
+    SerialCommandsWithResp o-- Support 
+    SerialCommands o-- Support 
 
+    CommandWithResponse --|> Command
+    CommandWithResponse <|.. SerialCommandsWithResp
+    Command <|.. SerialCommands
 
-    class Sdofcomponent{
-        + __init__()
-        + writePreCode(buff)
-        + writeStartCode(buff)
-        + writeRunOnceInitCode(buff)
-        + writeInitCode(buff)
-        + writeFrameCode(buff)
-        + writeRoutineEndCode(buff)
-        + writeExperimentEndCode(buff)
+    class FastrakDevice{
+        + void __init__(baudrate,station,timeout,setup)
+        + void connect()
+        + void enableStream()
+        + void disableStream()
+        + void readLine()
+        + void boresight()
+        + void basicSetup()
+        - void pollStream()
+        + bytearray data 
+        - serial ser
+        - FastrakStation station
+        - ThreadLock lock
+        - bool running
+        - Thread thread
+        - baudrate baud
     }
 
-    class SdofDeviceBackend{
-        + __init__()
-        + writeDeviceCode(buff)
-    }
+    class Command{<<interface>>}
+    class CommandWithResponse{<<interface>>}
+    class Support{<<collection>>}
+    class SerialCommands{<<collection>>}
+    class SerialCommandsWithResp{<<collection>>}
 
-    class SdofDevice{
-        + __new__(**)
-        + resolveBackend(cls)
-        + getBackends(cls)
-        + getAvailableDevices()
-        }
-    class SdofResponse{}
-
-    class BaseSdofDevice{
-        + __init__(**)
-        + addListener(listener,startLoop)
-        + clearListeners()
-        + dispatchMessages( clear)
-        + open()
-        + close()
-        + stop()
-        + start()
-        + poll()
-        + bind()
-        + unbind()
-        + unbindAll()
-        + getTime()
-        + bool isOpen
-        + bool isStarted
-        + list[object] clients 
-        + int clientCount
-        + bool canClose 
-        + float time 
-        }
-
-    class Sdof{
-        + __init__(**)
-        + addListener(listener,startLoop)
-        + clearListeners()
-        + dispatchMessages( clear)
-        + open()
-        + close()
-        + stop()
-        + start()
-        + poll()
-        + bind()
-        + unbind()
-        + unbindAll()
-        + getTime()
-        + bool isOpen
-        + bool isStarted
-        + list[object] clients 
-        + int clientCount
-        + bool canClose 
-        + float time 
-        }
-
-    class FastrakSdofDevice{}
-
-
-    class BaseDeviceComponent{<<interface>>}
-    class DeviceBackend{<<interface>>}
-    class BaseResponse{<<interface>>}
-    class BaseDevice{<<interface>>}
+    note for Support "A collection of enum and data supporting classes."
+    note for SerialCommands "A collection of serial commands for the Fastrak."
+    note for SerialCommandsWithResp "A collection of serial commands with a response for the Fastrak."
 
 
 ```
 
 #### Unit Designs
 
-Unit designs for the following components is restricted to the requirements of a PsychoPy plugin and
-omitted. From [ADR 00005](./content/madr/00005_plugin_architecture.md) we further restrict the
-design to that of the built-in PsychoPy microphone component.
-
-- SdofDevice
-- Sdofcomponent
-- SdofResponse
-- SdofDeviceBackend
-- BaseSdofDevice
-
-##### Fastrak 6DOF Device
+Unit designs (and test description) for the FastrakDevice unit (public members and methods) is found
+under [Unit Designs](./content/units). Designs for other units (commands and supporting classes) are
+omitted.
