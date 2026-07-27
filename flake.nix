@@ -22,7 +22,6 @@
           just
           prettier
           prek
-          python313
           rip2
           ruff
           tombi

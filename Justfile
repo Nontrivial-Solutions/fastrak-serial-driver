@@ -61,8 +61,8 @@ do-rumdl:
 
 # Run ruff 
 do-ruff:
-    ruff check --fix fastrak-serial-driver 
-    ruff format fastrak-serial-driver 
+    ruff check --fix src 
+    ruff format src 
 
 ##################################################################################################
 ####### check everything #########################################################################

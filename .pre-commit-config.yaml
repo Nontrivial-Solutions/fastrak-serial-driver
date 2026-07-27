@@ -10,7 +10,7 @@ repos:
                     - "libraries/**/*.*"
             files:
                 glob:
-                    - "fastrak-serial-driver/**/*.py"
+                    - "src/**/*.py"
 
           - id: ruff_format
             name: ruff format
@@ -21,7 +21,7 @@ repos:
                     - "libraries/**/*.*"
             files:
                 glob:
-                    - "fastrak-serial-driver/**/*.py"
+                    - "src/**/*.py"
           - id: tombi
             name: tombi
             language: system
