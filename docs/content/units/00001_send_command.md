@@ -18,7 +18,7 @@ A `bytearray` of data from a data stream session.
 
 ### Interfaces
 
-#### Constructor
+#### Constructor and Valid Class Function
 
 The constructor method takes in a collection of data:
 
@@ -280,6 +280,8 @@ No tests for the connect method.
 
 ### Disable Stream
 
+#### Positive Tests
+
 > [!test-card] "A stream is requested to close"
 >
 > A stream is requested to stop.  
@@ -295,19 +297,6 @@ No tests for the connect method.
 >
 
 #### Negative Tests
-
-> [!test-card] "A device is not connected"
->
-> A stream is requested to start, but no serial device is connected.  
->
-> **Inputs:**
->
-> - The serial device is not connected.
->
-> **Expected Output:**
->
-> A disconnected exception is raised.
->
 
 > [!test-card] "No stream is running"
 >
@@ -325,6 +314,8 @@ No tests for the connect method.
 
 ### Read Line
 
+#### Positive Tests
+
 > [!test-card] "A single data frame is requested"
 >
 > A single data frame is requested from the Fastrak.  
@@ -332,9 +323,7 @@ No tests for the connect method.
 > **Inputs:**
 >
 > - A mocked serial device is connected.
-> - A stream is:
->       - running
->       - not running
+> - A stream is not running
 >
 > **Expected Output:**
 >
@@ -342,6 +331,20 @@ No tests for the connect method.
 >
 
 #### Negative Tests
+
+> [!test-card] "A single data frame is requested"
+>
+> A single data frame is requested from the Fastrak.  
+>
+> **Inputs:**
+>
+> - A mocked serial device is connected.
+> - A stream is running
+>
+> **Expected Output:**
+>
+> The device responds with an exception.  
+>
 
 > [!test-card] "A device is not connected"
 >
@@ -358,6 +361,8 @@ No tests for the connect method.
 
 ### Boresight
 
+#### Positive Tests
+
 > [!test-card] "The boresight of a device is requested"
 >
 > The device is requested to boresight.  
@@ -365,9 +370,7 @@ No tests for the connect method.
 > **Inputs:**
 >
 > - A mocked serial device is connected.
-> - A stream is:
->       - running
->       - not running
+> - A stream is not running.
 >
 > **Expected Output:**
 >
@@ -375,6 +378,20 @@ No tests for the connect method.
 >
 
 #### Negative Tests
+
+> [!test-card] "The boresight of a device is requested"
+>
+> The device is requested to boresight.  
+>
+> **Inputs:**
+>
+> - A mocked serial device is connected.
+> - A stream is running.
+>
+> **Expected Output:**
+>
+> An exception is raised.
+>
 
 > [!test-card] "A device is not connected"
 >
@@ -388,16 +405,18 @@ No tests for the connect method.
 >
 > A disconnected exception is raised.
 >
+
 ### Basic Setup
+
+#### Positive Tests
 
 > [!test-card] "Command the device to basic setup state"
 >
-> The device is commanded into normal operating mode.  
+> The device is commanded into its normal operating state.  
 >
 > **Inputs:**
 >
 > - A mocked serial device is connected.
-> - A stream is running.
 >
 > **Expected Output:**
 >
@@ -408,7 +427,7 @@ No tests for the connect method.
 
 > [!test-card] "A device is not connected"
 >
-> The device is commanded into normal operating mode, but no serial device is connected.  
+> The device is commanded into its normal operating state, but no serial device is connected.  
 >
 > **Inputs:**
 >
@@ -421,7 +440,7 @@ No tests for the connect method.
 
 > [!test-card] "Command the device to basic setup state, but stream is running"
 >
-> The device is commanded into normal operating mode, but a stream is running.  
+> The device is commanded into its normal operating state, but a stream is running.  
 >
 > **Inputs:**
 >
