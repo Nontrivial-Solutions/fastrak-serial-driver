@@ -66,3 +66,19 @@ jobs:
             - name: Deploy to GitHub Pages
               if: startsWith(github.ref, 'refs/tags/') && inputs.do_release
               uses: actions/deploy-pages@v4
+
+            - name: Release
+              if: startsWith(github.ref, 'refs/tags/') && inputs.do_release
+              uses: softprops/action-gh-release@v2
+
+            - name: Build
+              run: |
+                  nix develop --command \
+                   uv build
+
+            # Check that basic features work and we didn't miss to include crucial files
+            - name: Publish
+              if: startsWith(github.ref, 'refs/tags/') && inputs.do_release
+              run: |
+                  nix develop --command \
+                   uv publish
