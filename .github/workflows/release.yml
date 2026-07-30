@@ -1,6 +1,9 @@
 name: Do quality check and release
 
 on:
+    pull_request:
+        branches: ["main"]
+
     workflow_dispatch:
         inputs:
             branch:
@@ -39,11 +42,6 @@ jobs:
             - name: Install Nix
               uses: DeterminateSystems/nix-installer-action@main
 
-            - name: Build
-              run: |
-                  nix develop --command \
-                      just build_all
-
             - name: Check
               run: |
                   nix develop --command \
@@ -52,7 +50,7 @@ jobs:
             - name: Test
               run: |
                   nix develop --command \
-                    just test_all
+                    just test
 
             - name: Docs html
               run: |
