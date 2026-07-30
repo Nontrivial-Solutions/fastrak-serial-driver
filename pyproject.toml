@@ -1,6 +1,5 @@
 [project]
 name = "FastrakSerialDriver"
-version = "0.0.0"
 description = """A serial driver for the Polhemus Fastrak.
         """
 readme = "docs/README.md"
@@ -8,6 +7,7 @@ requires-python = ">=3.10"
 dependencies = [
   "pyserial>=3.5",
 ]
+dynamic = ["version"]  # Remove any static version = "..." line
 
 [dependency-groups]
 dev = [
@@ -39,6 +39,16 @@ dev = [
   "reloadserver>=1.0.0",
   "ty>=0.0.34",
 ]
+
+[build-system]
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
@@ -99,6 +109,10 @@ mkdocs-bibtex = { git = "https://github.com/Joecstarr/mkdocs-bibtex" }
 mkdocs-author-plugin = { git = "https://github.com/Joecstarr/mkdocs-author-plugin" }
 markdown-gfm-admonition = { git = "https://github.com/Joecstarr/markdown-gfm-admonition" }
 mkdocs-include-dir-to-nav = { git = "https://github.com/Joecstarr/mkdocs_include_dir_to_nav" }
+
+[tool.uv-dynamic-versioning]
+style = "semver"  # also "semver" or "pvp"
+pattern = "default"  # "default" requires a "v" prefix; "default-unprefixed" drops it
 
 [lint]
 line-length = 100
