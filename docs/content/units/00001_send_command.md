@@ -18,7 +18,7 @@ A `bytearray` of data from a data stream session.
 
 ### Interfaces
 
-#### Constructor
+#### Constructor and Valid Class Function
 
 The constructor method takes in a collection of data:
 
@@ -181,7 +181,7 @@ stateDiagram-v2
 
 #### Positive Tests
 
-> [!test-card] "Initialized component"
+> [!test-card] "Initialized component[](){#TestDevice_ID_001}"
 >
 > Data is passed to the constructor and stored in the private data.
 >
@@ -201,7 +201,7 @@ No tests for the constructor.
 
 #### Positive Tests
 
-> [!test-card] "Device Connected"
+> [!test-card] "Device Connected[](){#TestDevice_ID_002}"
 >
 > A serial device is already connected to an instance of the class. The connect method is called.
 >
@@ -214,7 +214,7 @@ No tests for the constructor.
 > No response.
 >
 
-> [!test-card] "Device Not Connected"
+> [!test-card] "Device Not Connected[](){#TestDevice_ID_003}"
 >
 > A serial device is not connected to an instance of the class. The connect method is called.
 >
@@ -235,7 +235,7 @@ No tests for the connect method.
 
 #### Positive Tests
 
-> [!test-card] "A stream is requested"
+> [!test-card] "A stream is requested[](){#TestDevice_ID_004}"
 >
 > A stream is requested to start.  
 >
@@ -249,7 +249,7 @@ No tests for the connect method.
 > The method returns successfully, and a stream is running.
 >
 
-> [!test-card] "A stream is running"
+> [!test-card] "A stream is running[](){#TestDevice_ID_005}"
 >
 > A stream is requested to start, but the device is already streaming.  
 >
@@ -265,7 +265,7 @@ No tests for the connect method.
 
 #### Negative Tests
 
-> [!test-card] "A device is not connected"
+> [!test-card] "A device is not connected[](){#TestDevice_ID_006}"
 >
 > A stream is requested to start, but no serial device is connected.  
 >
@@ -280,7 +280,9 @@ No tests for the connect method.
 
 ### Disable Stream
 
-> [!test-card] "A stream is requested to close"
+#### Positive Tests
+
+> [!test-card] "A stream is requested to close[](){#TestDevice_ID_007}"
 >
 > A stream is requested to stop.  
 >
@@ -296,20 +298,7 @@ No tests for the connect method.
 
 #### Negative Tests
 
-> [!test-card] "A device is not connected"
->
-> A stream is requested to start, but no serial device is connected.  
->
-> **Inputs:**
->
-> - The serial device is not connected.
->
-> **Expected Output:**
->
-> A disconnected exception is raised.
->
-
-> [!test-card] "No stream is running"
+> [!test-card] "No stream is running[](){#TestDevice_ID_008}"
 >
 > A stream is requested to stop, but the device is not streaming.  
 >
@@ -325,16 +314,16 @@ No tests for the connect method.
 
 ### Read Line
 
-> [!test-card] "A single data frame is requested"
+#### Positive Tests
+
+> [!test-card] "A single data frame is requested[](){#TestDevice_ID_009}"
 >
 > A single data frame is requested from the Fastrak.  
 >
 > **Inputs:**
 >
 > - A mocked serial device is connected.
-> - A stream is:
->       - running
->       - not running
+> - A stream is not running
 >
 > **Expected Output:**
 >
@@ -343,7 +332,21 @@ No tests for the connect method.
 
 #### Negative Tests
 
-> [!test-card] "A device is not connected"
+> [!test-card] "A single data frame is requested[](){#TestDevice_ID_010}"
+>
+> A single data frame is requested from the Fastrak.  
+>
+> **Inputs:**
+>
+> - A mocked serial device is connected.
+> - A stream is running
+>
+> **Expected Output:**
+>
+> The device responds with an exception.  
+>
+
+> [!test-card] "A device is not connected[](){#TestDevice_ID_011}"
 >
 > A data frame is requested, but no serial device is connected.  
 >
@@ -358,16 +361,16 @@ No tests for the connect method.
 
 ### Boresight
 
-> [!test-card] "The boresight of a device is requested"
+#### Positive Tests
+
+> [!test-card] "The boresight of a device is requested[](){#TestDevice_ID_012}"
 >
 > The device is requested to boresight.  
 >
 > **Inputs:**
 >
 > - A mocked serial device is connected.
-> - A stream is:
->       - running
->       - not running
+> - A stream is not running.
 >
 > **Expected Output:**
 >
@@ -376,7 +379,21 @@ No tests for the connect method.
 
 #### Negative Tests
 
-> [!test-card] "A device is not connected"
+> [!test-card] "The boresight of a device is requested[](){#TestDevice_ID_013}"
+>
+> The device is requested to boresight.  
+>
+> **Inputs:**
+>
+> - A mocked serial device is connected.
+> - A stream is running.
+>
+> **Expected Output:**
+>
+> An exception is raised.
+>
+
+> [!test-card] "A device is not connected[](){#TestDevice_ID_014}"
 >
 > The device is requested to boresight, but no serial device is connected.  
 >
@@ -388,16 +405,18 @@ No tests for the connect method.
 >
 > A disconnected exception is raised.
 >
+
 ### Basic Setup
 
-> [!test-card] "Command the device to basic setup state"
+#### Positive Tests
+
+> [!test-card] "Command the device to basic setup state[](){#TestDevice_ID_015}"
 >
-> The device is commanded into normal operating mode.  
+> The device is commanded into its normal operating state.  
 >
 > **Inputs:**
 >
 > - A mocked serial device is connected.
-> - A stream is running.
 >
 > **Expected Output:**
 >
@@ -406,9 +425,9 @@ No tests for the connect method.
 
 #### Negative Tests
 
-> [!test-card] "A device is not connected"
+> [!test-card] "A device is not connected[](){#TestDevice_ID_016}"
 >
-> The device is commanded into normal operating mode, but no serial device is connected.  
+> The device is commanded into its normal operating state, but no serial device is connected.  
 >
 > **Inputs:**
 >
@@ -419,9 +438,10 @@ No tests for the connect method.
 > A disconnected exception is raised.
 >
 
-> [!test-card] "Command the device to basic setup state, but stream is running"
+> [!test-card] "Command the device to basic setup state, but stream is
+> running[](){#TestDevice_ID_017}"
 >
-> The device is commanded into normal operating mode, but a stream is running.  
+> The device is commanded into its normal operating state, but a stream is running.  
 >
 > **Inputs:**
 >

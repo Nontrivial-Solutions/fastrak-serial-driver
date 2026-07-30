@@ -1,5 +1,5 @@
 [project]
-name = "fastrak-serial-driver"
+name = "FastrakSerialDriver"
 version = "0.0.0"
 description = """A serial driver for the Polhemus Fastrak.
         """
@@ -13,9 +13,11 @@ dependencies = [
 dev = [
   "cairosvg>=2.9.0",
   "fake-bpy-module>=20260501",
+  "griffe-typingdoc>=0.3.1",
   "markdown-gfm-admonition @ git+https://github.com/Joecstarr/markdown-gfm-admonition",
   "markdown-include-variants>=0.0.8",
   "mdx-include>=1.4.2",
+  "mkdocs-api-autonav>=0.4.0",
   "mkdocs-author-plugin @ git+https://github.com/Joecstarr/mkdocs-author-plugin",
   "mkdocs-auto-refresh-build-pages>=1.0.3",
   "mkdocs-autorefs>=1.4.4",
@@ -29,12 +31,17 @@ dev = [
   "mkdoxy>=1.2.8",
   "parametrize-from-file>=0.20.0",
   "pymdown-extensions>=10.21.2",
+  "pyserial-mock>=1.0.0",
   "pytest>=9.0.3",
   "pytest-html>=4.2.0",
+  "pytest-mock>=3.15.1",
   "pytest-reportlog>=1.0.0",
   "reloadserver>=1.0.0",
   "ty>=0.0.34",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
 
 [tool.ruff]
 [tool.ruff.format]
@@ -43,7 +50,6 @@ indent-style = "space"
 docstring-code-format = true
 
 [tool.ruff.lint]
-exclude = ["test_*.py"]
 select = [
   # pycodestyle
   "E",
@@ -81,9 +87,12 @@ ignore = [
   "E501",
 ]
 
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
 [tool.setuptools.packages.find]
 # any folders to ignore when building the Python package for this plugin
-exclude = ["docs*", "docs_src*", "tests*"]
+exclude = ["docs*", "docs_src*"]
 
 [tool.uv.sources]
 mkdocs-bibtex = { git = "https://github.com/Joecstarr/mkdocs-bibtex" }

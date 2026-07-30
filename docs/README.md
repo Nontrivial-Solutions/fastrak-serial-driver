@@ -253,6 +253,8 @@ classDiagram
     FastrakDevice o-- SerialCommandsWithResp
     FastrakDevice o-- SerialCommands
     FastrakDevice o-- Support 
+    FastrakDevice *-- PollStream 
+    PollStream o-- Command
 
     SerialCommandsWithResp o-- Support 
     SerialCommands o-- Support 
@@ -261,6 +263,14 @@ classDiagram
     CommandWithResponse <|.. SerialCommandsWithResp
     Command <|.. SerialCommands
 
+    class PollStream{
+        + void __init__(baudrate,station,timeout,setup)
+        + void stop()
+        + void run()
+        + bytearray data 
+        - serial ser
+        - Thread thread
+    }
     class FastrakDevice{
         + void __init__(baudrate,station,timeout,setup)
         + void connect()
@@ -269,13 +279,12 @@ classDiagram
         + void readLine()
         + void boresight()
         + void basicSetup()
-        - void pollStream()
+        + void create_valid_device()
         + bytearray data 
         - serial ser
         - FastrakStation station
-        - ThreadLock lock
         - bool running
-        - Thread thread
+        - PollStream thread
         - baudrate baud
     }
 
