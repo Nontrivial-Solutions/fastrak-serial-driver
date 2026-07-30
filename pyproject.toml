@@ -50,7 +50,6 @@ indent-style = "space"
 docstring-code-format = true
 
 [tool.ruff.lint]
-exclude = ["test_*.py"]
 select = [
   # pycodestyle
   "E",
@@ -93,7 +92,7 @@ convention = "numpy"
 
 [tool.setuptools.packages.find]
 # any folders to ignore when building the Python package for this plugin
-exclude = ["docs*", "docs_src*", "tests*"]
+exclude = ["docs*", "docs_src*"]
 
 [tool.uv.sources]
 mkdocs-bibtex = { git = "https://github.com/Joecstarr/mkdocs-bibtex" }
