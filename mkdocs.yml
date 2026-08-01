@@ -86,7 +86,7 @@ plugins:
                           - serial
                       docstring_section_style: spacy
     - api-autonav:
-          modules: ["./src"]
+          modules: ["./fastrakSerialDriver"]
 markdown_extensions:
     - attr_list
     - footnotes

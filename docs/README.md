@@ -97,7 +97,7 @@ Files and directories shall be lower case, where capital is not required by a to
 │   ├── 📁 content
 │   ├── 📁 infra
 │   └── 📖 README.md
-├── 📁 src 
+├── 📁 fastrakSerialDriver
 │   └── 🐍 __init__.py
 ├── ⚙️ .editorconfig
 ├── 🙈 .gitignore

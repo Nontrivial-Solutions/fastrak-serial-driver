@@ -75,7 +75,7 @@ def setupDevice(mocker: MockerFixture):
     mocker : MockerFixture
         Mocking tooling fixture.
     """
-    mocker.patch('src.fastrakDevice.Serial', _SerialStub)
+    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', _SerialStub)
     device = FastrakDevice.create_valid_device()
     assert device is not None
     assert device._ser.is_open  # ty: ignore
@@ -103,7 +103,7 @@ def setupDevice(mocker: MockerFixture):
 
 def test_default_constructor(mocker: MockerFixture):
     """[TestDevice_ID_001][TestDevice_ID_001]."""
-    mocker.patch('src.fastrakDevice.Serial', _SerialStub)
+    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', _SerialStub)
     device = FastrakDevice.create_valid_device()
     assert device is not None
 
@@ -134,7 +134,7 @@ def test_default_constructor(mocker: MockerFixture):
 @pytest.mark.parametrize('doSetup', [True, False])
 def test_constructor(COMport, baud, station, timeout, doSetup, mocker: MockerFixture):
     """[TestDevice_ID_001][TestDevice_ID_001]."""
-    mocker.patch('src.fastrakDevice.Serial', _SerialStub)
+    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', _SerialStub)
     assert (
         FastrakDevice.create_valid_device(COMport, baud, station, timeout, doSetup)
         is not None
