@@ -3,7 +3,7 @@
 import pytest
 from pytest_mock.plugin import MockerFixture
 
-from src.fastrakDevice import FastrakDevice
+from fastrakSerialDriver.fastrakDevice import FastrakDevice
 
 # =================================================================================================
 # =================================================================================================
@@ -72,7 +72,7 @@ def setupFastrakDevice(mocker: MockerFixture):
     mocker : MockerFixture
         Mocking tooling fixture.
     """
-    mocker.patch('src.fastrakDevice.Serial', _SerialStub)
+    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', _SerialStub)
     device = FastrakDevice.create_valid_device()
     assert device is not None
     assert device._ser.is_open  # ty: ignore
@@ -90,4 +90,3 @@ def setupSerial():
     assert device is not None
 
     yield device
-

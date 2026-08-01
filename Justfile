@@ -41,7 +41,7 @@ live: bootstrap
     
 # Run tombi 
 do-tombi:
-    tombi format src 
+    tombi format fastrakSerialDriver
     tombi format docs 
     tombi format ./pyproject.toml 
     tombi format ./.rumdl.toml 
@@ -61,8 +61,8 @@ do-rumdl:
 
 # Run ruff 
 do-ruff:
-    ruff check --fix src 
-    ruff format src 
+    ruff check --fix fastrakSerialDriver
+    ruff format fastrakSerialDriver
 
 ##################################################################################################
 ####### check everything #########################################################################
