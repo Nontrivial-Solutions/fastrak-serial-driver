@@ -150,7 +150,7 @@ class OutputDataList(SerialCommand):
 
         """
         self._commandId = 'O'
-        self._payload = f'{station.value}'
+        self._payload = f'{station.value},'
         if (
             len(dataList) > 32
             and sum([it.value.sizeAscii for it in dataList]) > 254
