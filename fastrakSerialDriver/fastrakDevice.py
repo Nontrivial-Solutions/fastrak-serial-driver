@@ -139,6 +139,8 @@ class FastrakDevice:
                 except SerialException:
                     break  # TODO: Add Error flag
             DisableContMd().send(self._ser)
+            self._ser.read(self._ser.in_waiting)
+            self._ser.reset_input_buffer()
 
         def stop(self):
             """Stop the thread."""
@@ -367,3 +369,5 @@ class FastrakDevice:
                 OutputData.CARRIAGE_RETURN,
             ],
         ).send(self._ser)
+        self._ser.read(self._ser.in_waiting)
+        self._ser.reset_input_buffer()

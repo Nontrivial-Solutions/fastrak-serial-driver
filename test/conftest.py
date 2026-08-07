@@ -130,6 +130,9 @@ class _SerialStub:
         self._counter += 1
         return POSITION_BUFFER[idx][0]
 
+    def reset_input_buffer(self):
+        pass
+
 
 # ruff: enable[D103]
 
