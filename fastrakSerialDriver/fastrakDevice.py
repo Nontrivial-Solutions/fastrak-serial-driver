@@ -179,9 +179,9 @@ class FastrakDevice:
 
     def __init__(
         self,
-        COMport: str = 'COM1',
-        baud: SerialBaudrates = SerialBaudrates.BAUD_19200,
-        station: FastrakStations = FastrakStations.STATION_1,
+        COMport: str = 'COM3',
+        baud: SerialBaudrates = SerialBaudrates.BAUD_115200,
+        station: FastrakStations = FastrakStations.STATION_2,
         timeout: int = 1,
         setup: bool = True,
         pollingRate: float = 0.001,
@@ -221,9 +221,9 @@ class FastrakDevice:
     @classmethod
     def create_valid_device(
         cls,
-        COMport: str = 'COM1',
-        baud: SerialBaudrates = SerialBaudrates.BAUD_19200,
-        station: FastrakStations = FastrakStations.STATION_1,
+        COMport: str = 'COM3',
+        baud: SerialBaudrates = SerialBaudrates.BAUD_115200,
+        station: FastrakStations = FastrakStations.STATION_2,
         timeout: int = 1,
         setup: bool = True,
         pollingRate: float = 0.001,
