@@ -227,3 +227,39 @@ def test_unhappy_basicSetup_noSerial(setupDevice: FastrakDevice):
     # ruff: disable[B017]
     with pytest.raises(Exception):  # TODO: Add specific Exception
         setupDevice.basicSetup()
+
+
+# =================================================================================================
+# =================================================================================================
+# lastPosition Member Tests
+# =================================================================================================
+# =================================================================================================
+
+
+def test_lastPosition_isStreaming(setupDevice: FastrakDevice, posBuff):
+    """[TestDevice_ID_018][TestDevice_ID_018]."""
+    setupDevice.enableStream()
+    assert setupDevice.streaming
+    lp = setupDevice.lastPosition
+    assert lp is not None
+    assert lp.posTuple == pytest.approx(
+        posBuff[setupDevice._ser._counter - 1][1], 0.00001
+    )
+
+
+def test_lastPosition_NotStreaming(setupDevice: FastrakDevice, posBuff):
+    """[TestDevice_ID_019][TestDevice_ID_019]."""
+    assert not setupDevice.streaming
+    lp = setupDevice.lastPosition
+    assert lp is not None
+    assert lp.posTuple == pytest.approx(
+        posBuff[setupDevice._ser._counter - 1][1], 0.00001
+    )
+
+
+def test_unhappy_lastPosition_noSerial(setupDevice: FastrakDevice, posBuff):
+    """[TestDevice_ID_020][TestDevice_ID_020]."""
+    setupDevice._ser = None
+    # ruff: disable[B017]
+    with pytest.raises(Exception):  # TODO: Add specific Exception
+        lp = setupDevice.lastPosition
