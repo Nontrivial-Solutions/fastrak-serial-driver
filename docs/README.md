@@ -99,6 +99,9 @@ Files and directories shall be lower case, where capital is not required by a to
 │   └── 📖 README.md
 ├── 📁 fastrakSerialDriver
 │   └── 🐍 __init__.py
+├── 📁 test 
+│   ├── 🐍 test_<unit>.py 
+│   └── 🐍 __init__.py
 ├── ⚙️ .editorconfig
 ├── 🙈 .gitignore
 ├── 🛠️ .pre-commit-config.yaml
@@ -116,6 +119,7 @@ Files and directories shall be lower case, where capital is not required by a to
 
 - docs: This directory contains the high level documentation for the tool.
 - src: This directory contains the source code of the tool.
+- test: This directory contains the test code of the tool.
 - .github: This directory contains the GitHub infrastructure.  
 - .vscode: This directory contains the debugger configuration.  
 
