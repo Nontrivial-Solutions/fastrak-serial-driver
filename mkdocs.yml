@@ -50,6 +50,8 @@ extra_javascript:
 
 watch:
     - docs
+    - fastrakSerialDriver
+    - test
 
 nav:
     - Home: README.md
@@ -86,7 +88,7 @@ plugins:
                           - serial
                       docstring_section_style: spacy
     - api-autonav:
-          modules: ["./fastrakSerialDriver"]
+          modules: ["./fastrakSerialDriver", "./test"]
 markdown_extensions:
     - attr_list
     - footnotes

@@ -3,88 +3,8 @@
 import pytest
 from pytest_mock.plugin import MockerFixture
 
-from .commands.support import FastrakStations, SerialBaudrates
-from .fastrakDevice import FastrakDevice
-
-# =================================================================================================
-# =================================================================================================
-# =================================================================================================
-#  Support
-# =================================================================================================
-# =================================================================================================
-# =================================================================================================
-
-# =================================================================================================
-# =================================================================================================
-# Stub and Mock Classes
-# =================================================================================================
-# =================================================================================================
-
-
-# ruff: disable[D103]
-class _SerialStub:
-    """Stub of a pyserial interface."""
-
-    _is_open: bool
-    _in_waiting: int
-
-    def __init__(self, *args, **kwargs):
-        self._is_open = True
-        self._in_waiting = 1
-        pass
-
-    @property
-    def is_open(self) -> bool:
-        return self._is_open
-
-    @property
-    def in_waiting(self) -> int:
-        return self._is_open
-
-    def open(self):
-        self._is_open = True
-        pass
-
-    def close(self):
-        self._is_open = False
-        pass
-
-    def read(self, size=1):
-        return b'Some Bytes'
-
-    def write(self, data):
-        pass
-
-    def readline(self):
-        return b'Some Bytes'
-
-
-# ruff: enable[D103]
-
-
-# =================================================================================================
-# =================================================================================================
-# Fixtures
-# =================================================================================================
-# =================================================================================================
-@pytest.fixture
-def setupDevice(mocker: MockerFixture):
-    """Fixture for setting up a FastrakDevice with a mocked serial interface.
-
-    ----------
-    mocker : MockerFixture
-        Mocking tooling fixture.
-    """
-    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', _SerialStub)
-    device = FastrakDevice.create_valid_device()
-    assert device is not None
-    assert device._ser.is_open  # ty: ignore
-
-    yield device
-
-    if device._thread is not None and device._thread is not None:
-        device._thread.stop()
-
+from fastrakSerialDriver.commands.support import FastrakStations, SerialBaudrates
+from fastrakSerialDriver.fastrakDevice import FastrakDevice
 
 # =================================================================================================
 # =================================================================================================
@@ -101,9 +21,9 @@ def setupDevice(mocker: MockerFixture):
 # =================================================================================================
 
 
-def test_default_constructor(mocker: MockerFixture):
+def test_default_constructor(serialStub, mocker: MockerFixture):
     """[TestDevice_ID_001][TestDevice_ID_001]."""
-    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', _SerialStub)
+    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', serialStub)
     device = FastrakDevice.create_valid_device()
     assert device is not None
 
@@ -132,9 +52,11 @@ def test_default_constructor(mocker: MockerFixture):
 )
 @pytest.mark.parametrize('timeout', [2])
 @pytest.mark.parametrize('doSetup', [True, False])
-def test_constructor(COMport, baud, station, timeout, doSetup, mocker: MockerFixture):
+def test_constructor(
+    COMport, baud, station, timeout, doSetup, serialStub, mocker: MockerFixture
+):
     """[TestDevice_ID_001][TestDevice_ID_001]."""
-    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', _SerialStub)
+    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', serialStub)
     assert (
         FastrakDevice.create_valid_device(COMport, baud, station, timeout, doSetup)
         is not None
@@ -223,11 +145,11 @@ def test_unhappy_streamDisconnect(setupDevice: FastrakDevice):
 # =================================================================================================
 
 
-def test_readLine_notstreaming(setupDevice: FastrakDevice):
+def test_readLine_notstreaming(setupDevice: FastrakDevice, posBuff):
     """[TestDevice_ID_009][TestDevice_ID_009]."""
     assert not setupDevice.streaming
     line = setupDevice.readLine()
-    assert line == b'Some Bytes'
+    assert line == posBuff[setupDevice._ser._counter - 1][0].strip()
 
 
 def test_unhappy_readLine_streaming(setupDevice: FastrakDevice):
@@ -280,7 +202,7 @@ def test_unhappy_boresight_noSerial(setupDevice: FastrakDevice):
 # =================================================================================================
 # =================================================================================================
 # Basic Setup Method Tests
-# q=================================================================================================
+# =================================================================================================
 # =================================================================================================
 
 
@@ -305,3 +227,39 @@ def test_unhappy_basicSetup_noSerial(setupDevice: FastrakDevice):
     # ruff: disable[B017]
     with pytest.raises(Exception):  # TODO: Add specific Exception
         setupDevice.basicSetup()
+
+
+# =================================================================================================
+# =================================================================================================
+# lastPosition Member Tests
+# =================================================================================================
+# =================================================================================================
+
+
+def test_lastPosition_isStreaming(setupDevice: FastrakDevice, posBuff):
+    """[TestDevice_ID_018][TestDevice_ID_018]."""
+    setupDevice.enableStream()
+    assert setupDevice.streaming
+    lp = setupDevice.lastPosition
+    assert lp is not None
+    assert lp.posTuple == pytest.approx(
+        posBuff[setupDevice._ser._counter - 1][1], 0.00001
+    )
+
+
+def test_lastPosition_NotStreaming(setupDevice: FastrakDevice, posBuff):
+    """[TestDevice_ID_019][TestDevice_ID_019]."""
+    assert not setupDevice.streaming
+    lp = setupDevice.lastPosition
+    assert lp is not None
+    assert lp.posTuple == pytest.approx(
+        posBuff[setupDevice._ser._counter - 1][1], 0.00001
+    )
+
+
+def test_unhappy_lastPosition_noSerial(setupDevice: FastrakDevice, posBuff):
+    """[TestDevice_ID_020][TestDevice_ID_020]."""
+    setupDevice._ser = None
+    # ruff: disable[B017]
+    with pytest.raises(Exception):  # TODO: Add specific Exception
+        lp = setupDevice.lastPosition

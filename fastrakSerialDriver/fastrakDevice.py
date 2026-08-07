@@ -16,6 +16,7 @@ from .commands.noResp import (
 )
 from .commands.support import FastrakStations, OutputData, SerialBaudrates
 from .commands.withResp import ActiveStnState, SingleDataRecord, StationState
+from .fastrakPosition import FastrakPostion
 
 
 class FastrakDevice:
@@ -56,6 +57,7 @@ class FastrakDevice:
     _baud: SerialBaudrates
     _station: FastrakStations
     _timeout: int
+    _pollingRate: float
 
     class _PollingThread(threading.Thread):
         """Defines a polling class for reading from a Fastrak.
@@ -73,6 +75,7 @@ class FastrakDevice:
         _ser: Serial
         _data: bytearray
         _pollRate: float
+        _lastPosition: FastrakPostion | None
 
         def __init__(self, serial: Serial, pollRate: float):
             """Construct a _PollingThread class.
@@ -89,9 +92,14 @@ class FastrakDevice:
             self._stop_event = threading.Event()
             self._data = bytearray()
             self._pollRate = pollRate
+            self._lastPosition = None
 
         @property
-        def data(self) -> bytearray:
+        def lastPosition(self) -> FastrakPostion | None:
+            return self._lastPosition
+
+        @property
+        def data(self) -> bytes:
             """Contains the byte data from the last/current streaming session.
 
             Returns
@@ -100,7 +108,21 @@ class FastrakDevice:
                 Contains the byte data from the last/current streaming session.
 
             """
-            return self._data
+            return bytes(self._data)
+
+        def _getLastPos(self):
+            """Get the last tracking position from the buffer."""
+            if self._data:
+                data = self._data[-52:]
+                lines = data.splitlines()
+                if len(lines) == 1:  # Handle the first packet
+                    self._lastPosition = FastrakPostion.parseValidPosition(
+                        bytes(lines[0])
+                    )
+                else:
+                    self._lastPosition = FastrakPostion.parseValidPosition(
+                        bytes(lines[1])
+                    )
 
         def run(self):
             """Run the polling process."""
@@ -109,6 +131,7 @@ class FastrakDevice:
                 try:
                     data = self._ser.read(self._ser.in_waiting)
                     self._data.extend(data)
+                    self._getLastPos()
                     is_stopped = self._stop_event.wait(self._pollRate)
                     if is_stopped:
                         break
@@ -141,7 +164,7 @@ class FastrakDevice:
         return False
 
     @property
-    def data(self) -> bytearray | None:
+    def data(self) -> bytes | None:
         """Contains the byte data from the last/current streaming session.
 
         Returns
@@ -161,6 +184,7 @@ class FastrakDevice:
         station: FastrakStations = FastrakStations.STATION_1,
         timeout: int = 1,
         setup: bool = True,
+        pollingRate: float = 0.001,
     ) -> None:
         """Construct a FastrakDevice class.
 
@@ -188,6 +212,8 @@ class FastrakDevice:
         self._timeout = timeout
         self._station = station
         self._thread = None
+        self._pollingRate = pollingRate
+
         if setup:
             self.connect()
             self.basicSetup()
@@ -200,6 +226,7 @@ class FastrakDevice:
         station: FastrakStations = FastrakStations.STATION_1,
         timeout: int = 1,
         setup: bool = True,
+        pollingRate: float = 0.001,
     ) -> None | Self:
         """Construct a FastrakDevice class.
 
@@ -222,9 +249,36 @@ class FastrakDevice:
 
         """
         """Create a user, or return None if conditions are not met"""
-        if not (COMport and baud and station and timeout and setup is not None):
+        if not (
+            COMport
+            and baud
+            and station
+            and timeout
+            and pollingRate
+            and setup is not None
+            and pollingRate > 0
+        ):
             return None
-        return cls(COMport, baud, station, timeout, setup)
+        return cls(COMport, baud, station, timeout, setup, pollingRate)
+
+    @property
+    def lastPosition(self) -> FastrakPostion | None:
+        """Contains the byte data from the last/current streaming session.
+
+        Returns
+        -------
+        bytearray
+            Contains the byte data from the last/current streaming session.
+
+        """
+        if self._ser is None:
+            raise Exception('an error occurred')  # TODO: Add specific Exception
+        if not self.streaming:
+            return FastrakPostion.parseValidPosition(self.readLine())
+        else:
+            if self._thread is None:
+                raise Exception('an error occurred')  # TODO: Add specific Exception
+            return self._thread.lastPosition
 
     def connect(self) -> None:
         """Connect to the serial device."""
@@ -247,7 +301,7 @@ class FastrakDevice:
             raise Exception('an error occurred')  # TODO: Add specific Exception
 
         if self._thread is None:
-            self._thread = self._PollingThread(self._ser, 0.001)
+            self._thread = self._PollingThread(self._ser, self._pollingRate)
 
         if not self._thread.is_alive():
             self._thread.start()
@@ -273,7 +327,7 @@ class FastrakDevice:
         if self.streaming:
             raise Exception('an error occurred')  # TODO: Add specific Exception
 
-        return SingleDataRecord().sendResp(self._ser)
+        return SingleDataRecord().sendResp(self._ser).strip()
 
     def boresight(self) -> None:
         """Set the zero position for the station."""

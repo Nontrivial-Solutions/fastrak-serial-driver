@@ -99,6 +99,9 @@ Files and directories shall be lower case, where capital is not required by a to
 │   └── 📖 README.md
 ├── 📁 fastrakSerialDriver
 │   └── 🐍 __init__.py
+├── 📁 test 
+│   ├── 🐍 test_<unit>.py 
+│   └── 🐍 __init__.py
 ├── ⚙️ .editorconfig
 ├── 🙈 .gitignore
 ├── 🛠️ .pre-commit-config.yaml
@@ -116,6 +119,7 @@ Files and directories shall be lower case, where capital is not required by a to
 
 - docs: This directory contains the high level documentation for the tool.
 - src: This directory contains the source code of the tool.
+- test: This directory contains the test code of the tool.
 - .github: This directory contains the GitHub infrastructure.  
 - .vscode: This directory contains the debugger configuration.  
 
@@ -152,6 +156,7 @@ flowchart LR
   SRR(["Receive Response"])
   SR(["Start Recording"])
   ER(["End Recording"])
+  GP(["Get Position"])
   B(["Boresight"])
   GSR(["Get Single Record"])
   I(["Initialize Device"])
@@ -164,9 +169,11 @@ flowchart LR
   aU --> B 
   aU -->  I 
   aU --> GSR 
+  aU --> GP 
   aT --> PD 
 
   SR -. include .->SC
+  PD -. include .-> GP
   SR -. include .->B
   SR -. include .->I
   ER -. include .->SC
@@ -254,6 +261,7 @@ classDiagram
     FastrakDevice o-- SerialCommands
     FastrakDevice o-- Support 
     FastrakDevice *-- PollStream 
+    FastrakDevice o-- FastrakPosition 
     PollStream o-- Command
 
     SerialCommandsWithResp o-- Support 
@@ -263,14 +271,26 @@ classDiagram
     CommandWithResponse <|.. SerialCommandsWithResp
     Command <|.. SerialCommands
 
+    class FastrakPosition{
+        + void parseValidPosition(dataPacket)
+        + float  x
+        + float  y
+        + float  z
+        + float  psi
+        + float  theta
+        + float  phi
+    }
+
     class PollStream{
         + void __init__(baudrate,station,timeout,setup)
         + void stop()
         + void run()
-        + bytearray data 
+        + bytes data 
+        + FastrakPosition lastPosition 
         - serial ser
         - Thread thread
     }
+
     class FastrakDevice{
         + void __init__(baudrate,station,timeout,setup)
         + void connect()
@@ -280,7 +300,8 @@ classDiagram
         + void boresight()
         + void basicSetup()
         + void create_valid_device()
-        + bytearray data 
+        + bytes data 
+        + FastrakPosition lastPosition 
         - serial ser
         - FastrakStation station
         - bool running
@@ -303,6 +324,6 @@ classDiagram
 
 #### Unit Designs
 
-Unit designs (and test description) for the FastrakDevice unit (public members and methods) is found
-under [Unit Designs](./content/units). Designs for other units (commands and supporting classes) are
-omitted.
+Unit designs (and test description) for the FastrakDevice and FastrakPosition unit (public members
+and methods) is found under [Unit Designs](./content/units). Designs for other units (commands and
+supporting classes) are omitted.

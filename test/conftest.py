@@ -13,6 +13,72 @@ from fastrakSerialDriver.fastrakDevice import FastrakDevice
 # =================================================================================================
 # =================================================================================================
 
+POSITION_BUFFER: list[tuple[bytes, list[float]]] = [
+    (
+        b'2 \x00\x00\x00\x00'
+        + b'\x00\x00\x00\x00'
+        + b'\x00\x00\x00\x00'
+        + b'\x00\x00\x00\x00'
+        + b'\x00\x00\x00\x00'
+        + b'\x00\x00\x00\x00\r\n',
+        [0, 0, 0, 0, 0, 0],
+    ),
+    (
+        b'2 \x00\x00\x80\x3f'
+        + b'\x00\x00\x80\x3f'
+        + b'\x00\x00\x80\x3f'
+        + b'\x00\x00\x80\x3f'
+        + b'\x00\x00\x80\x3f'
+        + b'\x00\x00\x80\x3f\r\n',
+        [1, 1, 1, 1, 1, 1],
+    ),
+    (
+        b'2 \x00\x00\x80\xbf'
+        + b'\x00\x00\x80\xbf'
+        + b'\x00\x00\x80\xbf'
+        + b'\x00\x00\x80\xbf'
+        + b'\x00\x00\x80\xbf'
+        + b'\x00\x00\x80\xbf\r\n',
+        [-1, -1, -1, -1, -1, -1],
+    ),
+    (
+        b'2 \x00\x00\x80\x3f'
+        + b'\x00\x00\x80\xbf'
+        + b'\x00\x00\x80\x3f'
+        + b'\x00\x00\x80\xbf'
+        + b'\x00\x00\x80\x3f'
+        + b'\x00\x00\x80\xbf\r\n',
+        [1, -1, 1, -1, 1, -1],
+    ),
+    (
+        b'2 \x00\x00\x80\x3f'
+        + b'\x00\x00\x00\x40'
+        + b'\x00\x00\x40\x40'
+        + b'\x00\x00\x80\x40'
+        + b'\x00\x00\xa0\x40'
+        + b'\x00\x00\xc0\x40\r\n',
+        [1, 2, 3, 4, 5, 6],
+    ),
+    (
+        b'2 \xcd\xcc\xcc\x3d'
+        + b'\xcd\xcc\xcc\x3d'
+        + b'\xcd\xcc\xcc\x3d'
+        + b'\xcd\xcc\xcc\x3d'
+        + b'\xcd\xcc\xcc\x3d'
+        + b'\xcd\xcc\xcc\x3d\r\n',
+        [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+    ),
+    (
+        b'2 \xcd\xcc\x8c\x3f'
+        + b'\xcd\xcc\x8c\x3f'
+        + b'\xcd\xcc\x8c\x3f'
+        + b'\xcd\xcc\x8c\x3f'
+        + b'\xcd\xcc\x8c\x3f'
+        + b'\xcd\xcc\x8c\x3f\r\n',
+        [1.1, 1.1, 1.1, 1.1, 1.1, 1.1],
+    ),
+]
+
 # =================================================================================================
 # =================================================================================================
 # Stub and Mock Classes
@@ -26,10 +92,12 @@ class _SerialStub:
 
     _is_open: bool
     _in_waiting: int
+    _counter: int
 
     def __init__(self, *args, **kwargs):
         self._is_open = True
         self._in_waiting = 1
+        self._counter = 0
         pass
 
     @property
@@ -48,24 +116,31 @@ class _SerialStub:
         self._is_open = False
         pass
 
-    def read(self, size=1):
-        return b'Some Bytes'
+    def read(self, size=1) -> bytes:
+
+        idx = self._counter % len(POSITION_BUFFER)
+        self._counter += 1
+        return POSITION_BUFFER[idx][0]
 
     def write(self, data):
         pass
 
     def readline(self):
-        return b'Some Bytes'
+        idx = self._counter % len(POSITION_BUFFER)
+        self._counter += 1
+        return POSITION_BUFFER[idx][0]
 
 
 # ruff: enable[D103]
+
+
 # =================================================================================================
 # =================================================================================================
 # Fixtures
 # =================================================================================================
 # =================================================================================================
 @pytest.fixture
-def setupFastrakDevice(mocker: MockerFixture):
+def setupDevice(mocker: MockerFixture):
     """Fixture for setting up a FastrakDevice with a mocked serial interface.
 
     ----------
@@ -84,9 +159,14 @@ def setupFastrakDevice(mocker: MockerFixture):
 
 
 @pytest.fixture
-def setupSerial():
-    """Fixture for setting up a serial device with a mocked serial interface."""
-    device = _SerialStub()
-    assert device is not None
+def serialStub():
+    """@@@TODO"""
 
-    yield device
+    yield _SerialStub
+
+
+@pytest.fixture
+def posBuff():
+    """@@@TODO"""
+
+    yield POSITION_BUFFER

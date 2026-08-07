@@ -175,6 +175,30 @@ stateDiagram-v2
 
 ```
 
+#### Last Position
+
+Collect the last known position from the Fastrak. If there is no position then report `None`.
+
+##### State Machine
+
+```mermaid
+stateDiagram-v2
+    state "Read data from Fastrak" as rdff 
+    state "Parse packet" as pp 
+    state "Get position from polling thread" as gpfpt 
+    state is_connected <<choice>>
+    state is_running <<choice>>
+    [*] --> is_connected
+    is_connected --> [*]: Is not connected
+    is_connected --> is_running : Is connected
+    is_running --> gpfpt: Is streaming 
+    is_running --> rdff: Is not streaming 
+    rdff --> pp 
+    pp --> [*]
+    gpfpt --> [*]
+
+```
+
 ## Unit Test Description
 
 ### Constructor
@@ -451,4 +475,49 @@ No tests for the connect method.
 > **Expected Output:**
 >
 > A streaming exception is raised.
+>
+
+### Last Position
+
+#### Positive Tests
+
+> [!test-card] "Last position while streaming[](){#TestDevice_ID_018}"
+>
+> Start streaming then retrieve the last streaming position.
+>
+> **Inputs:**
+>
+> - A mocked serial device is connected.
+>
+> **Expected Output:**
+>
+> Correct last position reported.  
+>
+
+> [!test-card] "Last position while not streaming[](){#TestDevice_ID_019}"
+>
+> Retrieve the current position from the Fastrak.
+>
+> **Inputs:**
+>
+> - A mocked serial device is connected.
+>
+> **Expected Output:**
+>
+> Correct last position reported.  
+>
+
+#### Negative Tests
+
+> [!test-card] "A device is not connected[](){#TestDevice_ID_020}"
+>
+> The last position is requested but the serial device is not connected.  
+>
+> **Inputs:**
+>
+> - The serial device is not connected.
+>
+> **Expected Output:**
+>
+> A disconnected exception is raised.
 >
