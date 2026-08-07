@@ -35,6 +35,7 @@ class ConfigControlData(SerialCommand):
                 self._payload = data
             else:
                 raise Exception('an error occurred')
+        self._payload += '\n'
 
 
 class PositionFilterParam(SerialCommand):
@@ -89,6 +90,7 @@ class PositionFilterParam(SerialCommand):
             self._payload += ','
             if factor and 0 < factor and factor < 1:  # noqa: SIM300
                 self._payload += f'{factor:+1.3f}'
+        self._payload += '\n'
 
 
 class MetricUnits(SerialCommand):
@@ -130,6 +132,7 @@ class ResetAlignmentFrame(SerialCommand):
         """
         self._commandId = 'R'
         self._payload = f'{station.value}'
+        self._payload += '\n'
 
 
 class OutputDataList(SerialCommand):
@@ -155,6 +158,7 @@ class OutputDataList(SerialCommand):
         ):
             raise Exception('an error occurred')
         self._payload += ','.join([str(it.value.symbol) for it in dataList])
+        self._payload += '\n'
 
 
 class SetOutputPort(SerialCommand):
@@ -177,6 +181,7 @@ class SetOutputPort(SerialCommand):
         """
         self._commandId = 'o'
         self._payload = f'{orate.value},{parity.value},{bits.value},0'
+        self._payload += '\n'
 
 
 class EnableAsciiOut(SerialCommand):
@@ -220,6 +225,7 @@ class DefStylusBtnFun(SerialCommand):
             self._payload = f'{station.value},0'
         elif btnMode == BtnModes.POINTER:
             self._payload = f'{station.value},1'
+        self._payload += '\n'
 
 
 class DisableFxdMtlComp(SerialCommand):
@@ -312,6 +318,7 @@ class Boresight(SerialCommand):
         """
         self._commandId = 'B'
         self._payload = f'{station.value}'
+        self._payload += '\n'
 
 
 class UnBoresight(SerialCommand):
@@ -331,3 +338,4 @@ class UnBoresight(SerialCommand):
         """
         self._commandId = 'b'
         self._payload = f'{station.value}'
+        self._payload += '\n'

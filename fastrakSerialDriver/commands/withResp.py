@@ -48,6 +48,7 @@ class HemisphereOfOper(SerialCommandWithResponse):
             self._payload += ','
             if z:
                 self._payload += f'{z:+3.2f}'
+        self._payload += '\n'
 
 
 class SetSyncMode(SerialCommandWithResponse):
@@ -69,6 +70,7 @@ class SetSyncMode(SerialCommandWithResponse):
         self._payload = ''
         if sMode is not None:
             self._payload += f'{sMode.value}'
+        self._payload += '\n'
 
 
 class PositionEnvelop(SerialCommandWithResponse):
@@ -134,6 +136,7 @@ class PositionEnvelop(SerialCommandWithResponse):
             self._payload += ','
             if zMin:
                 self._payload += f'{zMin:+3.3f}'
+        self._payload += '\n'
 
 
 class AttitudeFilterParam(SerialCommandWithResponse):
@@ -188,6 +191,7 @@ class AttitudeFilterParam(SerialCommandWithResponse):
             self._payload += ','
             if factor and 0 < factor and factor < 1:  # noqa: SIM300
                 self._payload += f'{factor:+1.3f}'
+        self._payload += '\n'
 
 
 class BuiltInTestInfo(SerialCommandWithResponse):
@@ -208,6 +212,7 @@ class BuiltInTestInfo(SerialCommandWithResponse):
         self._payload = f'{bit.value}'
         if clear:
             self._payload += f',{0}'
+        self._payload += '\n'
 
 
 class SystemStatusRecord(SerialCommandWithResponse):
@@ -259,6 +264,7 @@ class TransmitterMountingFrame(SerialCommandWithResponse):
             self._payload += ','
             if r:
                 self._payload += f'{r:+3.3f}'
+        self._payload += '\n'
 
 
 class AngularEnvelop(SerialCommandWithResponse):
@@ -324,6 +330,7 @@ class AngularEnvelop(SerialCommandWithResponse):
             self._payload += ','
             if rlMin:
                 self._payload += f'{rlMin:+3.3f}'
+        self._payload += '\n'
 
 
 class SingleDataRecord(SerialCommandWithResponse):
@@ -371,6 +378,7 @@ class DefTipOffset(SerialCommandWithResponse):
             self._payload += f',{zOff:+3.2f}'
         else:
             raise Exception('an error occurred')
+        self._payload += '\n'
 
 
 class ActiveStnState(SerialCommandWithResponse):
@@ -395,6 +403,7 @@ class ActiveStnState(SerialCommandWithResponse):
         self._payload = f'{station.value}'
         if state:
             self._payload += f',{state.value}'
+        self._payload += '\n'
 
 
 class DefineInc(SerialCommandWithResponse):
@@ -420,6 +429,7 @@ class DefineInc(SerialCommandWithResponse):
             self._payload = f'{station.value},{distance:+3.2f}'
         else:
             self._payload = f'{station.value}'
+        self._payload += '\n'
 
 
 class BoresightRefAng(SerialCommandWithResponse):
@@ -460,6 +470,7 @@ class BoresightRefAng(SerialCommandWithResponse):
             self._payload += ','
             if rlRef:
                 self._payload += f'{rlRef:+3.2f}'
+        self._payload += '\n'
 
 
 class AlignRefFrm(SerialCommandWithResponse):
@@ -546,3 +557,4 @@ class AlignRefFrm(SerialCommandWithResponse):
             self._payload += ','
             if Yz:
                 self._payload += f'{Yz:+3.2f}'
+        self._payload += '\n'

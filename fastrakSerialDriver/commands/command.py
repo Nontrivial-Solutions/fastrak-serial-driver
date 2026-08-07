@@ -30,7 +30,7 @@ class SerialCommand(Protocol):
 
 
         """
-        ser.write(f'{self._commandId}{self._payload}\n'.encode(encoding='ASCII'))
+        ser.write(f'{self._commandId}{self._payload}'.encode(encoding='ASCII'))
 
 
 class SerialCommandWithResponse(SerialCommand):
@@ -51,5 +51,5 @@ class SerialCommandWithResponse(SerialCommand):
 
 
         """
-        ser.write(f'{self._commandId}{self._payload}\n'.encode(encoding='ASCII'))
+        ser.write(f'{self._commandId}{self._payload}'.encode(encoding='ASCII'))
         return ser.readline()
