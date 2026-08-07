@@ -9,6 +9,7 @@ from serial import Serial, SerialException
 from .commands.noResp import (
     Boresight,
     DisableContMd,
+    EnableAsciiOut,
     EnableBinOut,
     EnableContMd,
     OutputDataList,
@@ -58,6 +59,7 @@ class FastrakDevice:
     _station: FastrakStations
     _timeout: int
     _pollingRate: float
+    _isBinary: bool
 
     class _PollingThread(threading.Thread):
         """Defines a polling class for reading from a Fastrak.
@@ -76,8 +78,9 @@ class FastrakDevice:
         _data: bytearray
         _pollRate: float
         _lastPosition: FastrakPostion | None
+        _isBinary: bool
 
-        def __init__(self, serial: Serial, pollRate: float):
+        def __init__(self, serial: Serial, pollRate: float, isBinary: bool):
             """Construct a _PollingThread class.
 
             Parameters
@@ -93,6 +96,7 @@ class FastrakDevice:
             self._data = bytearray()
             self._pollRate = pollRate
             self._lastPosition = None
+            self._isBinary = isBinary
 
         @property
         def lastPosition(self) -> FastrakPostion | None:
@@ -112,7 +116,7 @@ class FastrakDevice:
 
         def _getLastPos(self):
             """Get the last tracking position from the buffer."""
-            if self._data:
+            if self._isBinary and self._data:
                 data = self._data[-52:]
                 lines = data.splitlines()
                 if len(lines) == 1:  # Handle the first packet
@@ -139,6 +143,8 @@ class FastrakDevice:
                 except SerialException:
                     break  # TODO: Add Error flag
             DisableContMd().send(self._ser)
+            self._ser.read(self._ser.in_waiting)
+            self._ser.reset_input_buffer()
 
         def stop(self):
             """Stop the thread."""
@@ -179,11 +185,12 @@ class FastrakDevice:
 
     def __init__(
         self,
-        COMport: str = 'COM1',
-        baud: SerialBaudrates = SerialBaudrates.BAUD_19200,
-        station: FastrakStations = FastrakStations.STATION_1,
+        COMport: str = 'COM3',
+        baud: SerialBaudrates = SerialBaudrates.BAUD_115200,
+        station: FastrakStations = FastrakStations.STATION_2,
         timeout: int = 1,
         setup: bool = True,
+        isBinary: bool = True,
         pollingRate: float = 0.001,
     ) -> None:
         """Construct a FastrakDevice class.
@@ -213,6 +220,7 @@ class FastrakDevice:
         self._station = station
         self._thread = None
         self._pollingRate = pollingRate
+        self._isBinary = isBinary
 
         if setup:
             self.connect()
@@ -221,11 +229,12 @@ class FastrakDevice:
     @classmethod
     def create_valid_device(
         cls,
-        COMport: str = 'COM1',
-        baud: SerialBaudrates = SerialBaudrates.BAUD_19200,
-        station: FastrakStations = FastrakStations.STATION_1,
+        COMport: str = 'COM3',
+        baud: SerialBaudrates = SerialBaudrates.BAUD_115200,
+        station: FastrakStations = FastrakStations.STATION_2,
         timeout: int = 1,
         setup: bool = True,
+        isBinary: bool = True,
         pollingRate: float = 0.001,
     ) -> None | Self:
         """Construct a FastrakDevice class.
@@ -255,11 +264,12 @@ class FastrakDevice:
             and station
             and timeout
             and pollingRate
+            and isBinary is not None
             and setup is not None
             and pollingRate > 0
         ):
             return None
-        return cls(COMport, baud, station, timeout, setup, pollingRate)
+        return cls(COMport, baud, station, timeout, setup, isBinary, pollingRate)
 
     @property
     def lastPosition(self) -> FastrakPostion | None:
@@ -273,6 +283,9 @@ class FastrakDevice:
         """
         if self._ser is None:
             raise Exception('an error occurred')  # TODO: Add specific Exception
+        if not self._isBinary:
+            raise Exception('an error occurred')  # TODO: Add specific Exception
+
         if not self.streaming:
             return FastrakPostion.parseValidPosition(self.readLine())
         else:
@@ -301,7 +314,9 @@ class FastrakDevice:
             raise Exception('an error occurred')  # TODO: Add specific Exception
 
         if self._thread is None:
-            self._thread = self._PollingThread(self._ser, self._pollingRate)
+            self._thread = self._PollingThread(
+                self._ser, self._pollingRate, self._isBinary
+            )
 
         if not self._thread.is_alive():
             self._thread.start()
@@ -357,7 +372,10 @@ class FastrakDevice:
 
         ActiveStnState(self._station, StationState.ON).send(self._ser)
 
-        EnableBinOut().send(self._ser)
+        if self._isBinary:
+            EnableBinOut().send(self._ser)
+        else:
+            EnableAsciiOut().send(self._ser)
 
         OutputDataList(
             self._station,
@@ -367,3 +385,5 @@ class FastrakDevice:
                 OutputData.CARRIAGE_RETURN,
             ],
         ).send(self._ser)
+        self._ser.read(self._ser.in_waiting)
+        self._ser.reset_input_buffer()

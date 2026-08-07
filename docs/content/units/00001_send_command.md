@@ -27,6 +27,12 @@ The constructor method takes in a collection of data:
 - Serial timeout: How long to wait for the serial connection.
 - Station ID: The ID of the station (peripheral slot) to use on the Fastrak.
 - Run setup flag: Indicates if the constructor should also set up the Fastrak.
+- Binary or ASCII output flag: Indicates if the output should be ASCII or Binary.
+- Polling Rate: The rate to poll the Fastrak in streaming mode.
+
+> [!note]
+>
+> The position flow only works in binary mode.
 
 ##### State Machine
 
@@ -520,4 +526,17 @@ No tests for the connect method.
 > **Expected Output:**
 >
 > A disconnected exception is raised.
+>
+
+> [!test-card] "The driver is in ASCII mode[](){#TestDevice_ID_021}"
+>
+> The last position is requested but the driver is in ASCII mode.  
+>
+> **Inputs:**
+>
+> - The mock serial device is connected.
+>
+> **Expected Output:**
+>
+> An exception is raised.
 >

@@ -104,8 +104,8 @@ class StationState(Enum):
         Station off state
     """
 
-    ON = 0
-    OFF = 1
+    OFF = 0
+    ON = 1
 
 
 class MacroFilter(Enum):

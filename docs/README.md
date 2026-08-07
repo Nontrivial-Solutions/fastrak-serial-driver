@@ -303,6 +303,7 @@ classDiagram
         + bytes data 
         + FastrakPosition lastPosition 
         - serial ser
+        - bool isBinary
         - FastrakStation station
         - bool running
         - PollStream thread
