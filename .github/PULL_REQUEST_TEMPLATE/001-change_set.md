@@ -9,10 +9,10 @@ module for the Conway notation."]
 
 ## Type of Change
 
-* [ ] New feature
-* [ ] Bug fix
-* [ ] Documentation update
-* [ ] Refactoring
+- [ ] New feature
+- [ ] Bug fix
+- [ ] Documentation update
+- [ ] Refactoring
 
 ## Description
 
@@ -30,18 +30,20 @@ information about any added tests.]
 
 ## Checklist
 
-* [ ] I have made corresponding changes to the documentation.
-* [ ] My code adheres to the coding and style guidelines of the project.
-* [ ] I have performed a self-review of my own code.
-* [ ] I have commented my code, particularly in hard-to-understand areas.
-* [ ] My changes generate no new errors or warnings
-* [ ] No new tests are failing.
-* [ ] Any changes beyond one monorepo are justified above
+[Provide a justification for any unchecked boxes.]
 
-### New Feature Sublist
+- [ ] I have made corresponding changes to the documentation.
+- [ ] My code adheres to the coding and style guidelines of the project.
+- [ ] I have performed a self-review of my own code.
+- [ ] I have commented my code, particularly in hard-to-understand areas.
+- [ ] My changes generate no new errors or warnings
+- [ ] No new tests are failing.
 
-* [ ] The feature has a module monorepo
-* [ ] The feature has a use case document
-* [ ] The feature has a unit description document
-* [ ] The feature has an implementation
-* [ ] The feature has unit tests
+### New Feature List
+
+[Provide a justification for any unchecked boxes.]
+
+- [ ] The feature has a use case document
+- [ ] The feature has a unit description document
+- [ ] The feature has an implementation
+- [ ] The feature has unit tests
