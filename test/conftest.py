@@ -162,6 +162,25 @@ def setupDevice(mocker: MockerFixture):
 
 
 @pytest.fixture
+def setupDeviceAscii(mocker: MockerFixture):
+    """Fixture for setting up a FastrakDevice with a mocked serial interface.
+
+    ----------
+    mocker : MockerFixture
+        Mocking tooling fixture.
+    """
+    mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', _SerialStub)
+    device = FastrakDevice.create_valid_device(isBinary=False)
+    assert device is not None
+    assert device._ser.is_open  # ty: ignore
+
+    yield device
+
+    if device._thread is not None and device._thread is not None:
+        device._thread.stop()
+
+
+@pytest.fixture
 def serialStub():
     """@@@TODO"""
 

@@ -52,13 +52,25 @@ def test_default_constructor(serialStub, mocker: MockerFixture):
 )
 @pytest.mark.parametrize('timeout', [2])
 @pytest.mark.parametrize('doSetup', [True, False])
+@pytest.mark.parametrize('bin', [True, False])
+@pytest.mark.parametrize('polling', [0.1, 1])
 def test_constructor(
-    COMport, baud, station, timeout, doSetup, serialStub, mocker: MockerFixture
+    COMport,
+    baud,
+    station,
+    timeout,
+    doSetup,
+    bin,
+    polling,
+    serialStub,
+    mocker: MockerFixture,
 ):
     """[TestDevice_ID_001][TestDevice_ID_001]."""
     mocker.patch('fastrakSerialDriver.fastrakDevice.Serial', serialStub)
     assert (
-        FastrakDevice.create_valid_device(COMport, baud, station, timeout, doSetup)
+        FastrakDevice.create_valid_device(
+            COMport, baud, station, timeout, doSetup, bin, polling
+        )
         is not None
     )
 
@@ -263,3 +275,10 @@ def test_unhappy_lastPosition_noSerial(setupDevice: FastrakDevice, posBuff):
     # ruff: disable[B017]
     with pytest.raises(Exception):  # TODO: Add specific Exception
         lp = setupDevice.lastPosition
+
+
+def test_unhappy_lastPosition_ASCII(setupDeviceAscii: FastrakDevice, posBuff):
+    """[TestDevice_ID_021][TestDevice_ID_021]."""
+    assert not setupDeviceAscii.streaming
+    with pytest.raises(Exception):  # TODO: Add specific Exception
+        lp = setupDeviceAscii.lastPosition
