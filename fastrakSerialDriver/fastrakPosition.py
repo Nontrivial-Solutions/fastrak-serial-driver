@@ -65,7 +65,7 @@ class FastrakPostion:
         if not packet:
             return None
         packet = packet.strip()
-        packet = packet[2:]
+        packet = packet[3:]
         if len(packet) != 4 * 6:
             return None
         positions = struct.unpack('<ffffff', packet)
