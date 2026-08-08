@@ -15,7 +15,7 @@ from fastrakSerialDriver.fastrakDevice import FastrakDevice
 
 POSITION_BUFFER: list[tuple[bytes, list[float]]] = [
     (
-        b'2 \x00\x00\x00\x00'
+        b'02 \x00\x00\x00\x00'
         + b'\x00\x00\x00\x00'
         + b'\x00\x00\x00\x00'
         + b'\x00\x00\x00\x00'
@@ -24,7 +24,7 @@ POSITION_BUFFER: list[tuple[bytes, list[float]]] = [
         [0, 0, 0, 0, 0, 0],
     ),
     (
-        b'2 \x00\x00\x80\x3f'
+        b'02 \x00\x00\x80\x3f'
         + b'\x00\x00\x80\x3f'
         + b'\x00\x00\x80\x3f'
         + b'\x00\x00\x80\x3f'
@@ -33,7 +33,7 @@ POSITION_BUFFER: list[tuple[bytes, list[float]]] = [
         [1, 1, 1, 1, 1, 1],
     ),
     (
-        b'2 \x00\x00\x80\xbf'
+        b'02 \x00\x00\x80\xbf'
         + b'\x00\x00\x80\xbf'
         + b'\x00\x00\x80\xbf'
         + b'\x00\x00\x80\xbf'
@@ -42,7 +42,7 @@ POSITION_BUFFER: list[tuple[bytes, list[float]]] = [
         [-1, -1, -1, -1, -1, -1],
     ),
     (
-        b'2 \x00\x00\x80\x3f'
+        b'02 \x00\x00\x80\x3f'
         + b'\x00\x00\x80\xbf'
         + b'\x00\x00\x80\x3f'
         + b'\x00\x00\x80\xbf'
@@ -51,7 +51,7 @@ POSITION_BUFFER: list[tuple[bytes, list[float]]] = [
         [1, -1, 1, -1, 1, -1],
     ),
     (
-        b'2 \x00\x00\x80\x3f'
+        b'02 \x00\x00\x80\x3f'
         + b'\x00\x00\x00\x40'
         + b'\x00\x00\x40\x40'
         + b'\x00\x00\x80\x40'
@@ -60,7 +60,7 @@ POSITION_BUFFER: list[tuple[bytes, list[float]]] = [
         [1, 2, 3, 4, 5, 6],
     ),
     (
-        b'2 \xcd\xcc\xcc\x3d'
+        b'02 \xcd\xcc\xcc\x3d'
         + b'\xcd\xcc\xcc\x3d'
         + b'\xcd\xcc\xcc\x3d'
         + b'\xcd\xcc\xcc\x3d'
@@ -69,7 +69,7 @@ POSITION_BUFFER: list[tuple[bytes, list[float]]] = [
         [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
     ),
     (
-        b'2 \xcd\xcc\x8c\x3f'
+        b'02 \xcd\xcc\x8c\x3f'
         + b'\xcd\xcc\x8c\x3f'
         + b'\xcd\xcc\x8c\x3f'
         + b'\xcd\xcc\x8c\x3f'
