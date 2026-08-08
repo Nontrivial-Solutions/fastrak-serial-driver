@@ -45,7 +45,7 @@ jobs:
             - name: Check
               run: |
                   nix develop --command \
-                      just check
+                      just check-release
 
             - name: Test
               run: |

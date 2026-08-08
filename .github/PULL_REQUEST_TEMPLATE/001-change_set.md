@@ -33,6 +33,7 @@ information about any added tests.]
 [Provide a justification for any unchecked boxes.]
 
 - [ ] I have made corresponding changes to the documentation.
+- [ ] There is no `./.todo` directory
 - [ ] My code adheres to the coding and style guidelines of the project.
 - [ ] I have performed a self-review of my own code.
 - [ ] I have commented my code, particularly in hard-to-understand areas.
