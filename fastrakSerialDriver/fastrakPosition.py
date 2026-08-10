@@ -2,7 +2,6 @@
 
 import struct
 from dataclasses import dataclass
-from typing import Self
 
 
 @dataclass
@@ -34,7 +33,7 @@ class FastrakPostion:
     theta: float
 
     @classmethod
-    def parseValidPosition(cls, packet: bytes) -> Self | None:
+    def parseValidPosition(cls, packet: bytes) -> 'FastrakPostion | None':
         r"""Parse a byte packet into a position object sextuple.
 
         The Fastrak uses an IEEE 754-1985 LSB float.
@@ -58,7 +57,7 @@ class FastrakPostion:
 
         Returns
         -------
-            Self | None
+            FastrakPostion | None
                - None when packet is invalid.
                - A FastrakPostion instance when packet is valid.
         """

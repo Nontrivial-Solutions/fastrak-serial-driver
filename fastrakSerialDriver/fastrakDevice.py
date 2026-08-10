@@ -2,7 +2,6 @@
 
 import threading
 import time
-from typing import Self
 
 from serial import Serial, SerialException
 
@@ -49,6 +48,13 @@ class FastrakDevice:
     _timeout : int, default: 1second
         Serial timeout for the connection.
 
+    _pollingRate : float
+        The polling rate for streaming mode.
+
+    _isBinary : bool
+        Should the device be configured for ASCII or binary mode.
+
+
     """
 
     _ser: Serial | None
@@ -71,7 +77,7 @@ class FastrakDevice:
         _data : bytearray
             Data from last streaming session.
         _pollRate : float
-            The rate to pool the Fastrak.
+            The rate to poll the Fastrak.
         """
 
         _ser: Serial
@@ -210,7 +216,13 @@ class FastrakDevice:
             Serial timeout for the connection.
 
         setup : bool, default: True
+            Flag indicating if basic setup should not run.
 
+        isBinary : bool
+            Should the device be configured for ASCII or binary mode.
+
+        pollingRate : float
+            The polling rate for streaming.
 
         """
         self._ser = None
@@ -236,8 +248,8 @@ class FastrakDevice:
         setup: bool = True,
         isBinary: bool = True,
         pollingRate: float = 0.001,
-    ) -> None | Self:
-        """Construct a FastrakDevice class.
+    ) -> 'None | FastrakDevice':
+        """Construct a FastrakDevice class, or return None if conditions are not met.
 
         Parameters
         ----------
@@ -254,10 +266,20 @@ class FastrakDevice:
             Serial timeout for the connection.
 
         setup : bool, default: True
+            Flag indicating if basic setup should not run.
 
+        isBinary : bool
+            Should the device be configured for ASCII or binary mode.
+
+        pollingRate : float
+            The polling rate for streaming.
+
+        Returns
+        -------
+        'None | FastrakDevice'
+            None if conditions are not and a FastrakDevice otherwise.
 
         """
-        """Create a user, or return None if conditions are not met"""
         if not (
             COMport
             and baud
