@@ -157,6 +157,7 @@ flowchart LR
   SR(["Start Recording"])
   ER(["End Recording"])
   GP(["Get Position"])
+  CB(["Clear Data Buffer"])
   B(["Boresight"])
   GSR(["Get Single Record"])
   I(["Initialize Device"])
@@ -170,6 +171,7 @@ flowchart LR
   aU -->  I 
   aU --> GSR 
   aU --> GP 
+  aU --> CB 
   aT --> PD 
 
   SR -. include .->SC
@@ -285,6 +287,7 @@ classDiagram
         + void __init__(baudrate,station,timeout,setup)
         + void stop()
         + void run()
+        + void clearBuffer()
         + bytes data 
         + FastrakPosition lastPosition 
         - serial ser
@@ -299,6 +302,7 @@ classDiagram
         + void readLine()
         + void boresight()
         + void basicSetup()
+        + void clearBuffer()
         + void create_valid_device()
         + bytes data 
         + FastrakPosition lastPosition 

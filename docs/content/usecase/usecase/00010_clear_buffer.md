@@ -1,5 +1,5 @@
 ---
-title: 00009 Get Current Position 
+title: 00010 Clear Data Buffer 
 authors:
   - joe_starr
 status: high
@@ -7,11 +7,11 @@ status: high
 
 ## Goals
 
-The use case models the retrieval of instantanious positional data from the Fastrak.  
+The use case models the clearing of the streaming data buffer for reuse.  
 
 ### Happy Outcome
 
-When the use case completes successfully the current position of the Fastrak is reported.
+When the use case completes successfully the streaming data buffer is emptied.
 
 ### Sad Outcome
 
@@ -24,16 +24,16 @@ When the use case completes unsuccessfully a failure is handled.
 ## Actors
 
 - [User](../actors/00001_user.md)
-- [Time](../actors/00002_time.md)
 
 ## Trigger
 
-An actor requests the current position from a Fastrak device.  
+A user request the streaming buffer to be emptied.  
 
 ## Scenario
 
 1. The serial device is verified
-1. The position data is obtained from the device
+1. The device is verified not streaming
+1. The streaming buffer is emptied
 1. An error occurs:
     1. Set error state
     1. Report a disconnect or recording error
