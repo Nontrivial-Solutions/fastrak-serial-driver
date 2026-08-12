@@ -202,6 +202,25 @@ stateDiagram-v2
     rdff --> pp 
     pp --> [*]
     gpfpt --> [*]
+```
+
+#### Clear Data Buffer
+
+Clears the streaming data buffer for the Fastrak object.
+
+##### State Machine
+
+```mermaid
+stateDiagram-v2
+    state "Empty streaming buffer" as esb
+    state is_connected <<choice>>
+    state is_running <<choice>>
+    [*] --> is_connected
+    is_connected --> [*]: Is not connected
+    is_connected --> is_running : Is connected
+    is_running --> [*]: Is streaming 
+    is_running --> esb: Is not streaming 
+    esb --> [*]
 
 ```
 
@@ -535,6 +554,54 @@ No tests for the connect method.
 > **Inputs:**
 >
 > - The mock serial device is connected.
+>
+> **Expected Output:**
+>
+> An exception is raised.
+>
+### Clear Data Buffer
+
+#### Positive Tests
+
+> [!test-card] "Empty Buffer [](){#TestDevice_ID_022}"
+>
+> Request the Fastrak object empty the data buffer.
+>
+> **Inputs:**
+>
+> - A mocked serial device is connected.
+> - The buffer is:
+>           - filled
+>           - unfilled
+>
+> **Expected Output:**
+>
+> Empty buffer is reported.  
+>
+
+#### Negative Tests
+
+> [!test-card] "A device is not connected[](){#TestDevice_ID_023}"
+>
+> The buffer is requested to be emptied but the serial device is not connected.  
+>
+> **Inputs:**
+>
+> - The serial device is not connected.
+>
+> **Expected Output:**
+>
+> A disconnected exception is raised.
+>
+
+> [!test-card] "The device is streaming[](){#TestDevice_ID_024}"
+>
+> The last position is requested but the serial device is not connected.  
+>
+> **Inputs:**
+>
+> - The mock serial device is connected.
+> - The device is streaming.
 >
 > **Expected Output:**
 >
