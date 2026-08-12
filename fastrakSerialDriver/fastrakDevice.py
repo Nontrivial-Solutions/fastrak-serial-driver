@@ -161,6 +161,10 @@ class FastrakDevice:
                     raise Exception('an error occurred')  # TODO: Add specific Exception
                 time.sleep(0.01)
 
+        def clearBuffer(self) -> None:
+            """Clear the streaming buffer."""
+            self._data.clear()
+
     @property
     def streaming(self) -> bool:
         """Reports the streaming status of the device.
@@ -314,6 +318,13 @@ class FastrakDevice:
             if self._thread is None:
                 raise Exception('an error occurred')  # TODO: Add specific Exception
             return self._thread.lastPosition
+
+    def clearBuffer(self) -> None:
+        """Clear the streaming buffer."""
+        if self._ser is None or not self._ser.is_open or self.streaming:
+            raise Exception('an error occurred')  # TODO: Add specific Exception
+        if self._thread is not None:
+            self._thread.clearBuffer()
 
     def connect(self) -> None:
         """Connect to the serial device."""
