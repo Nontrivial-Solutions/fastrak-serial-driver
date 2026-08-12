@@ -28,7 +28,7 @@ When the use case completes unsuccessfully a failure is handled.
 
 ## Trigger
 
-A time event requests the recording of a data frame from a Fastrak device.  
+An actor requests the current position from a Fastrak device.  
 
 ## Scenario
 
