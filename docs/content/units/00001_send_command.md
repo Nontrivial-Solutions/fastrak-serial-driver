@@ -310,6 +310,20 @@ No tests for the connect method.
 > **Expected Output:**
 >
 > No response is given.
+
+> [!test-card] "A stream is completed and restarted[](){#TestDevice_ID_025}"
+>
+> A stream is requested to start after a stream has previously completed.  
+>
+> **Inputs:**
+>
+> - A mocked serial device is connected.
+> - A stream has previously run.
+> - A stream is not already running.
+>
+> **Expected Output:**
+>
+> The method returns successfully, and a stream is running.
 >
 
 #### Negative Tests

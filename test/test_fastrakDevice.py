@@ -119,6 +119,16 @@ def test_double_stream(setupDevice: FastrakDevice):
     assert setupDevice.streaming
 
 
+def test_double_stream_after_complete(setupDevice: FastrakDevice):
+    """[TestDevice_ID_025][TestDevice_ID_025]."""
+    setupDevice.enableStream()
+    assert setupDevice.streaming
+    setupDevice.disableStream()
+    assert not setupDevice.streaming
+    setupDevice.enableStream()
+    assert setupDevice.streaming
+
+
 def test_unhappy_streamConnect(setupDevice: FastrakDevice):
     """[TestDevice_ID_006][TestDevice_ID_006]."""
     setupDevice._ser = None
