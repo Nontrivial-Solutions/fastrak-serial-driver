@@ -329,7 +329,8 @@ class FastrakDevice:
     def connect(self) -> None:
         """Connect to the serial device."""
         if self._ser is not None:
-            self._ser.open()
+            if not self._ser.is_open:
+                self._ser.open()
         else:
             self._ser = Serial(
                 self._COMport, self._baud.value * 100, timeout=self._timeout
@@ -346,10 +347,11 @@ class FastrakDevice:
         if not self._ser.is_open:
             raise Exception('an error occurred')  # TODO: Add specific Exception
 
-        if self._thread is None:
-            self._thread = self._PollingThread(
-                self._ser, self._pollingRate, self._isBinary
-            )
+        if self._thread is not None and self._thread.is_alive():
+            self._thread.stop()
+            self._thread.join()
+
+        self._thread = self._PollingThread(self._ser, self._pollingRate, self._isBinary)
 
         if not self._thread.is_alive():
             self._thread.start()
@@ -363,8 +365,9 @@ class FastrakDevice:
         if not self.streaming:
             raise Exception('an error occurred')  # TODO: Add specific Exception
 
-        if self._thread is not None:
+        if self._thread is not None and self._thread.is_alive():
             self._thread.stop()
+            self._thread.join()
 
     def readLine(self) -> bytes:
         """Request a single data frame from the Fastrak."""
