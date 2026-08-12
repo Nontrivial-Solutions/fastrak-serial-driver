@@ -157,8 +157,9 @@ def setupDevice(mocker: MockerFixture):
 
     yield device
 
-    if device._thread is not None and device._thread is not None:
+    if device._thread is not None and device._thread.is_alive():
         device._thread.stop()
+        device._thread.join()
 
 
 @pytest.fixture
