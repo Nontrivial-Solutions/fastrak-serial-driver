@@ -282,3 +282,40 @@ def test_unhappy_lastPosition_ASCII(setupDeviceAscii: FastrakDevice, posBuff):
     assert not setupDeviceAscii.streaming
     with pytest.raises(Exception):  # TODO: Add specific Exception
         lp = setupDeviceAscii.lastPosition
+
+
+# =================================================================================================
+# =================================================================================================
+# Clear Buffer Tests
+# =================================================================================================
+# =================================================================================================
+
+
+def test_clearBuffer_isNotStreaming(setupDevice: FastrakDevice, posBuff):
+    """[TestDevice_ID_022][TestDevice_ID_022]."""
+    setupDevice.enableStream()
+    assert setupDevice.streaming
+    setupDevice.disableStream()
+    assert not setupDevice.streaming
+    assert setupDevice.data != b''
+    setupDevice.clearBuffer()
+    assert setupDevice.data == b''
+    setupDevice.clearBuffer()
+    assert setupDevice.data == b''
+
+
+def test_unhappy_clearBuffer_isStreaming(setupDevice: FastrakDevice, posBuff):
+    """[TestDevice_ID_023][TestDevice_ID_023]."""
+    setupDevice.enableStream()
+    assert setupDevice.streaming
+    # ruff: disable[B017]
+    with pytest.raises(Exception):  # TODO: Add specific Exception
+        setupDevice.clearBuffer()
+
+
+def test_unhappy_clearBuffer_noSerial(setupDevice: FastrakDevice, posBuff):
+    """[TestDevice_ID_024][TestDevice_ID_024]."""
+    setupDevice._ser = None
+    # ruff: disable[B017]
+    with pytest.raises(Exception):  # TODO: Add specific Exception
+        lp = setupDevice.lastPosition
