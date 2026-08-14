@@ -20,6 +20,12 @@ on:
                 default: false
                 type: boolean
 
+            do_page:
+                description: "Publish to github pages"
+                required: true
+                default: false
+                type: boolean
+
 permissions:
     pages: write
     id-token: write
@@ -58,13 +64,13 @@ jobs:
                     just html
 
             - name: Upload artifact
-              if: startsWith(github.ref, 'refs/tags/') && inputs.do_release
+              if: inputs.do_page
               uses: actions/upload-pages-artifact@v5
               with:
                   path: ./.build/docs
 
             - name: Deploy to GitHub Pages
-              if: startsWith(github.ref, 'refs/tags/') && inputs.do_release
+              if: inputs.do_page
               uses: actions/deploy-pages@v5
 
             - name: Release
