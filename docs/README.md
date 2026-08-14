@@ -25,11 +25,11 @@ commands for the Fastrak.
 ### About the Documentation
 
 The following document describes the "rules" and expectation for development. The
-["Code Comments"](./content/code/) page contains the technical context descriptions found in the
-source files. The ["Use Cases"](./content/use_cases/) page contains a collection of use cases and a
-use case diagram for the tool. The ["Decisions"](./content/madr/) page contains a collection of
-[architectural decision records](https://adr.github.io/madr/) [@Kopp2018] giving context on why this
-tool is the way it is.
+["API Reference"](./reference/fastrakSerialDriver/) page contains the technical context descriptions
+found in the source files. The ["Use Cases"](./content/usecase/usecase) page contains a collection
+of use cases and a use case diagram for the tool. The ["Decisions"](./content/madr/) page contains a
+collection of [architectural decision records](https://adr.github.io/madr/) [@Kopp2018] giving
+context on why this tool is the way it is.
 
 ### Issues
 
