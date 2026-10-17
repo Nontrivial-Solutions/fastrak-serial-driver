@@ -1,5 +1,6 @@
 """Collection of serial command interfaces."""
 
+from time import sleep
 from typing import Protocol
 
 import serial
@@ -31,6 +32,7 @@ class SerialCommand(Protocol):
 
         """
         ser.write(f'{self._commandId}{self._payload}'.encode(encoding='ASCII'))
+        sleep(0.1)
 
 
 class SerialCommandWithResponse(SerialCommand):
@@ -52,4 +54,5 @@ class SerialCommandWithResponse(SerialCommand):
 
         """
         ser.write(f'{self._commandId}{self._payload}'.encode(encoding='ASCII'))
+        sleep(0.1)
         return ser.readline()
