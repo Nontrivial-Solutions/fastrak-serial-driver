@@ -1,5 +1,7 @@
 """Contains the FastrakDevice class unit tests."""
 
+import time
+
 import pytest
 from pytest_mock.plugin import MockerFixture
 
@@ -262,6 +264,7 @@ def test_lastPosition_isStreaming(setupDevice: FastrakDevice, posBuff):
     """[TestDevice_ID_018][TestDevice_ID_018]."""
     setupDevice.enableStream()
     assert setupDevice.streaming
+    time.sleep(0.1)
     lp = setupDevice.lastPosition
     assert lp is not None
     assert lp.posTuple == pytest.approx(

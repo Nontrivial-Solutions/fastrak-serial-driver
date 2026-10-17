@@ -193,6 +193,12 @@ class FastrakDevice:
             return self._thread.data
         return None
 
+    def __eq__(self, other: object):
+        """Determine if two Fastrak devices are equal."""
+        return bool(
+            isinstance(other, FastrakDevice) and other._COMport == self._COMport
+        )
+
     def __init__(
         self,
         COMport: str = 'COM3',

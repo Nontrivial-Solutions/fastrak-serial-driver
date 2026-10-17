@@ -94,13 +94,17 @@ Files and directories shall be lower case, where capital is not required by a to
 ├── 📁 .vscode
 │   └── ⚙️ launch.json
 ├── 📁 docs
-│   ├── 📁 content
+│   ├── 📁 contentt
+│   │   ├── 📁 madr
+│   │   ├── 📁 units
+│   │   └── 📁 usecase
 │   ├── 📁 infra
 │   └── 📖 README.md
 ├── 📁 fastrakSerialDriver
 │   └── 🐍 __init__.py
 ├── 📁 test 
 │   ├── 🐍 test_<unit>.py 
+│   ├── 🐍 conftest.py
 │   └── 🐍 __init__.py
 ├── ⚙️ .editorconfig
 ├── 🙈 .gitignore
